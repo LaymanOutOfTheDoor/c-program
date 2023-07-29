@@ -34,7 +34,7 @@ void *worker(void *arg) {
 }
 
 void *accepter_thread(void *arg) {
-    int fd = *(int *)arg;
+    int fd = *(int *) arg;
 
 #ifdef WORKER_POOL_SIZE
     struct worker_thread_context *ctx = malloc(WORKER_POOL_SIZE * sizeof(struct worker_thread_context));
@@ -51,10 +51,17 @@ void *accepter_thread(void *arg) {
     struct sockaddr_in client_addr;
 
     int idx = 0;
-    while(1) {
-        bzero(&client_addr, sizeof(client_addr));
+    while (1) {
+#ifdef WINDOWS_DEFINITION
+        // Windows下的代码
+        memset(&client_addr, 0, sizeof(client_addr));
+#endif
+#ifdef LINUX_DEFINITION
+        // Linux下的代码
+    bzero(&client_addr, sizeof(client_addr));
+#endif
         socklen_t len = sizeof(client_addr);
-        int conn_fd = accept(fd, (struct sockaddr *)&client_addr, &len);
+        int conn_fd = accept(fd, (struct sockaddr *) &client_addr, &len);
         if (conn_fd < 0) {
             perror("accept error");
             break;

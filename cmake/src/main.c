@@ -4,6 +4,7 @@
 #include "http_response.h"
 
 int main(int argc, char *argv[]) {
+    printf("hello world");
     if (argc != 2) {
         perror("usage: ./server <port>");
         exit(1);
